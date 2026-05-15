@@ -18,15 +18,15 @@ RUN apt-get update && apt-get install -y \
 # Set the working directory
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt .
+# Install Python dependencies from the backend folder
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Playwright browsers
 RUN playwright install chromium
 
-# Copy the rest of the application code
-COPY . .
+# Copy the rest of the backend code
+COPY backend/ .
 
 # Expose the port Uvicorn runs on
 EXPOSE 8000

@@ -10,8 +10,12 @@ load_dotenv()
 # Directory containing this file (backend/). Used so SQLite is not tied to the shell cwd.
 _BACKEND_DIR = Path(__file__).resolve().parent
 
-# Preferred: PostgreSQL URL in .env (example: postgresql+psycopg2://user:pass@localhost:5432/pricewise)
+# Preferred: PostgreSQL URL in .env (example: postgresql+psycopg://user:pass@localhost:5432/pricewise)
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
+elif DATABASE_URL.startswith("postgresql://") and not DATABASE_URL.startswith("postgresql+psycopg://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 if not DATABASE_URL:
     # Optional override; if unset, use a single stable file next to database.py (not ./ cwd).
     env_sqlite = os.getenv("SQLITE_URL", "").strip()
